@@ -1,4 +1,4 @@
-package com.example.janus.beerbuddies;
+package superapki.beerbuddies;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

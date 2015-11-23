@@ -1,4 +1,4 @@
-package com.example.janus.beerbuddies;
+package superapki.beerbuddies;
 
 import org.junit.Test;
 
