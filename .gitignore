@@ -3,3 +3,4 @@ app/*
 !app/
 !app/src
 !.gitignore
+!res/*
