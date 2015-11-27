@@ -5,6 +5,7 @@ import android.media.browse.MediaBrowser;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.telecom.Connection;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,21 +41,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+    }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        this.mGoogleApiClient.connect();
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        this.mGoogleApiClient.disconnect();
+    }
     @Override
     public void onConnected(Bundle var1) {
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.d("success","success");
+        if (this.mLastLocation != null) {
+            LatLng sydney = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
+            this.mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in mLocation"));
+            this.mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
         }
 
     @Override
     public void onConnectionSuspended(int var1) {
-        System.out.print("suspended");
+        Log.d("suspended","suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult var1) {
-        System.out.print("failed");
+        Log.d("fail","fail");
     }
 
 
@@ -70,13 +87,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
-
+        Log.d("allal","allal");
         // Add a marker in Sydney and move the camera
 //        getLastLo
-        if (this.mLastLocation != null) {
-            LatLng sydney = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
-            this.mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in mLocation"));
-            this.mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
     }
 }

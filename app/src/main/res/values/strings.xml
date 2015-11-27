@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">BeerBuddies</string>
-    <string name="activity_main_title">Deez is nutz</string>
-    <string name="edit_message">Top nigga editable text</string>
-    <string name="button_send">Send that sheit, mate</string>
-    <string name="title_activity_display_message">Dat activity tho</string>
+    <string name="activity_main_title">Find your BeerBuddies!</string>
+    <string name="button_send">Start looking</string>
+    <string name="title_activity_display_message">Your buddies</string>
     <string name="title_activity_maps">Map</string>
 </resources>

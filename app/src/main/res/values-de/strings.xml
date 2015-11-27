@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BierKumpels</string>
-    <string name="activity_main_title">Die Nüss</string>
-    <string name="edit_message">Ganz toller Text</string>
-    <string name="button_send">Sende den Scheiß, Jude</string>
-    <string name="title_activity_display_message">Dies ist wundervoll</string>
+    <string name="activity_main_title">Finde deine BierKumpels!</string>
+    <string name="button_send">Suche jetzt</string>
+    <string name="title_activity_display_message">Deine Kumpels</string>
+    <string name="title_activity_maps">Karte</string>
 </resources>

@@ -7,27 +7,23 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="horizontal"
-    tools:context="superapki.beerbuddies.MainActivity">
+    android:orientation="vertical"
+    tools:context="superapki.beerbuddies.MainActivity"
+    android:gravity="center">
 
     <TextView
-        android:layout_width="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/activity_main_title"
-        android:id="@+id/textView"
-        android:layout_weight="1"/>
-    <EditText
-        android:id="@+id/edit_message"
-        android:hint="@string/edit_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:id="@+id/textView"/>
+
     <Button
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
         android:id="@+id/button"
-        android:layout_weight="1"
-        android:onClick="btnSend"/>
+        android:onClick="btnSend"
+        android:gravity="center" />
 </LinearLayout>
