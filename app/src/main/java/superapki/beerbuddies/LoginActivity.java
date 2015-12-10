@@ -9,19 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.facebook.FacebookSdk;
 
-public class DisplayMessageActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
-        Intent intent = getIntent();
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(intent.getStringExtra(MainActivity.EDIT_TEXT));
-        setContentView(textView);
     }
-
-
 }

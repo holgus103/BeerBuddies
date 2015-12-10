@@ -1,7 +1,11 @@
 package superapki.beerbuddies;
 
+import android.content.Context;
 import android.location.Location;
 import android.media.browse.MediaBrowser;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.telecom.Connection;
@@ -17,13 +21,62 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+    private LatLng[] markers;
+    private class DownloadBuddies extends AsyncTask<String,Void, String>{
+        @Override
+        protected String doInBackground(String... params) {
+            InputStream is = null;
+            try{
+                URL url = new URL(params[0]);
+                HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+                connection.setConnectTimeout(10000);
+                connection.setReadTimeout(15000);
+                connection.setDoInput(true);
+                connection.setRequestMethod("GET");
+                connection.connect();
+                int response = connection.getResponseCode();
+                Log.d("DEBUG","" + response);
+                is = connection.getInputStream();
+                return readIt(is,500);
+            }
+            catch (IOException e){
+                Log.d(e.getMessage(),e.getMessage());
+            }
+            finally{
+                if(is != null)
+                    is.close();
+            }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+    private void loadMarkers(){
+        NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        if(netInfo != null && netInfo.isConnected()){
+            new DownloadBuddies().execute("http://127.0.0.1");
+        }
+        else{
+            Log.d("NET","no connection");
+        }
+    }
     protected synchronized void buildGoogleApiClient() {
         this.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -91,4 +144,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add a marker in Sydney and move the camera
 //        getLastLo
     }
+
 }
