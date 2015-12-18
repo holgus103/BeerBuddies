@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">BeerBuddies</string>
     <string name="activity_main_title">Find your BeerBuddies!</string>
-    <string name="button_send">Start looking</string>
-    <string name="title_activity_display_message">Your buddies</string>
+    <string name="main_btnSearch">Start looking</string>
+    <string name="title_activity_main">Your buddies</string>
+    <string name="title_activity_login">Log in</string>
     <string name="title_activity_maps">Map</string>
+    <string name="login_msg">Please tell us who you are, so that you can find your BeerBuddies</string>
+    <string name="main_btnLogin">Log in</string>
+    <string name="authentication_failure">Authentication failed</string>
+    <string name="authentication_success">Great! Hi </string>
 </resources>

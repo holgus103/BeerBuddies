@@ -22,8 +22,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_send"
-        android:id="@+id/button"
-        android:onClick="btnSend"
+        android:text="@string/main_btnSearch"
+        android:id="@+id/btnStart"
+        android:onClick="startMap"
         android:gravity="center" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_btnLogin"
+        android:onClick="startLogin"
+        />
 </LinearLayout>

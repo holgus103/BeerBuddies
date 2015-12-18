@@ -14,10 +14,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void btnSend(View view) {
+    public void startMap(View view) {
         Intent intent = new Intent(this,MapsActivity.class);
 //        EditText editText = (EditText) findViewById(R.id.acti);
 //        intent.putExtra(EDIT_TEXT,editText.getText().toString());
+        startActivity(intent);
+    }
+
+    public void startLogin(View view){
+        Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
     }
 }

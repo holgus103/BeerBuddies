@@ -21,8 +21,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,28 +43,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private class DownloadBuddies extends AsyncTask<String,Void, String>{
         @Override
         protected String doInBackground(String... params) {
-            InputStream is = null;
-            try{
-                URL url = new URL(params[0]);
-                HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+            try {
+                return this.downloadData(params[0]);
+            }
+            catch(IOException e) {
+                return null;
+            }
+        }
+        private String downloadData(String address) throws IOException{
+            BufferedReader is = null;
+            try {
+                URL url = new URL(address);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(10000);
                 connection.setReadTimeout(15000);
                 connection.setDoInput(true);
                 connection.setRequestMethod("GET");
                 connection.connect();
                 int response = connection.getResponseCode();
-                Log.d("DEBUG","" + response);
-                is = connection.getInputStream();
-                return readIt(is,500);
-            }
-            catch (IOException e){
-                Log.d(e.getMessage(),e.getMessage());
+                Log.d("DEBUG", "" + response);
+                is = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                return is.readLine();
             }
             finally{
-                if(is != null)
+                if(is!= null) {
                     is.close();
+                }
             }
-            return null;
+
+
         }
 
         @Override
@@ -71,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void loadMarkers(){
         NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         if(netInfo != null && netInfo.isConnected()){
-            new DownloadBuddies().execute("http://127.0.0.1");
+            new DownloadBuddies().execute("http://invasionserver-holgus103.rhcloud.com/");
         }
         else{
             Log.d("NET","no connection");
@@ -88,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.loadMarkers();
         this.buildGoogleApiClient();
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -111,9 +123,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         Log.d("success","success");
         if (this.mLastLocation != null) {
-            LatLng sydney = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
-            this.mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in mLocation"));
-            this.mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng myLoc = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
+            this.mMap.addMarker(new MarkerOptions().position(myLoc).title("Marker in mLocation"));
+            this.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
         }
         }
 
@@ -140,7 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
-        Log.d("allal","allal");
         // Add a marker in Sydney and move the camera
 //        getLastLo
     }
