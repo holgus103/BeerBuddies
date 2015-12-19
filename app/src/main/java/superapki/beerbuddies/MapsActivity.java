@@ -21,6 +21,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    private LatLng[] markers;
     private class DownloadBuddies extends AsyncTask<String,Void, String>{
         @Override
         protected String doInBackground(String... params) {
@@ -77,12 +80,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            try {
+                JSONArray points = new JSONArray(s);
+                for(int i= 0; i<points.length();i++){
+                    JSONObject val = points.getJSONObject(i);
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(val.getDouble("Latitude"),val.getDouble("Longitude"))).title("Marker "+i));
+                }
+            }
+            catch(JSONException e){
+                Log.d("JSON", "Not a JSON String");
+            }
+
+
         }
     }
     private void loadMarkers(){
         NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         if(netInfo != null && netInfo.isConnected()){
-            new DownloadBuddies().execute("http://invasionserver-holgus103.rhcloud.com/");
+            new DownloadBuddies().execute("http://192.168.18.101:3000/points");
         }
         else{
             Log.d("NET","no connection");
@@ -99,7 +114,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.loadMarkers();
         this.buildGoogleApiClient();
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -152,6 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
+        this.loadMarkers();
         // Add a marker in Sydney and move the camera
 //        getLastLo
     }
