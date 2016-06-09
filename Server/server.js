@@ -1,10 +1,10 @@
 var express = require('express');
-var pg = require('pg');
+var profiles = require('./db/profiles.js');
 var app = express();
 var conString = "";
 
 app.get('/',function(req,res){
-	res.send("allahu akbart");
+	profiles.registerNewUser("juzek","elohaselo","juzekwladcakluzek");
 });
 
 app.get('/getMates/:id',function(req,res){
@@ -14,6 +14,7 @@ app.get('/getMates/:id',function(req,res){
 app.get('/register/:token',function(req,res){
 	res.send("thanks for registering " + req.params.token);
 });
+
 
 app.get('/points',function(req,res){
 	res.send(JSON.stringify(points));

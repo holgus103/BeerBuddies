@@ -2,13 +2,12 @@ package superapki.beerbuddies;
 
 import android.content.Context;
 import android.location.Location;
-import android.media.browse.MediaBrowser;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.telecom.Connection;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 URL url = new URL(address);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(10000);
-                connection.setReadTimeout(15000);
+                connection.setReadTimeout(2000);
                 connection.setDoInput(true);
                 connection.setRequestMethod("GET");
                 connection.connect();
@@ -80,18 +79,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try {
-                JSONArray points = new JSONArray(s);
-                for(int i= 0; i<points.length();i++){
-                    JSONObject val = points.getJSONObject(i);
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(val.getDouble("Latitude"),val.getDouble("Longitude"))).title("Marker "+i));
+            if(s!=null) {
+                try {
+                    JSONArray points = new JSONArray(s);
+                    for (int i = 0; i < points.length(); i++) {
+                        JSONObject val = points.getJSONObject(i);
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(val.getDouble("Latitude"), val.getDouble("Longitude"))).title("Marker " + i));
+                    }
+                } catch (JSONException e) {
+                    Log.d("JSON", "Not a JSON String");
                 }
             }
-            catch(JSONException e){
-                Log.d("JSON", "Not a JSON String");
-            }
-
-
         }
     }
     private void loadMarkers(){

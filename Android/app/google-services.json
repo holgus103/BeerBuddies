@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "433273849802",
+    "project_id": "beerbuddies-1140"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433273849802:android:f2faa63b955c142c",
+        "android_client_info": {
+          "package_name": "superapki.beerbuddies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433273849802-v042sr5q5qn657ol1llhofq13la9rndc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "superapki.beerbuddies",
+            "certificate_hash": "92D14933D40FCB8F1573391D9C84DEFAB2337630"
+          }
+        },
+        {
+          "client_id": "433273849802-25f91ko57d5331nl4f8eqatd4tp3aldf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC99SE3-d440-M7kfDj5OIWuIE2blRN_cg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
