@@ -4,15 +4,22 @@ var app = express();
 var conString = "";
 
 app.get('/',function(req,res){
-	profiles.registerNewUser("juzek","elohaselo","juzekwladcakluzek");
+	//profiles.loginUser("juzek","elohaselo");
+        res.send("not available");
 });
 
-app.get('/getMates/:id',function(req,res){
-	res.send("your mates " + req.params.id);
+app.get('/updateLocation', function(req,res){
+        profiles.updateLocation('juzek','asdasdasd', 2.0, 2.0);
+        res.send("ok");
 });
 
-app.get('/register/:token',function(req,res){
-	res.send("thanks for registering " + req.params.token);
+app.get('/getBuddies', function(req,res){
+        
+});
+
+app.get('/register/:username/:password:/:email',function(req,res){
+        profiles.registerNewUser(req.params.username, req.params.password, req.params.email);
+        res.send("registered");
 });
 
 
