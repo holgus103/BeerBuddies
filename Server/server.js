@@ -1,33 +1,50 @@
+// external dependencies
 var express = require('express');
-var profiles = require('./db/profiles.js');
 var app = express();
-var conString = "";
+// profile module
+var profiles = require('./db/profiles.js');
+
 
 app.get('/',function(req,res){
 	//profiles.loginUser("juzek","elohaselo");
         res.send("not available");
 });
-
+/**
+ * Updates user location
+ */
 app.get('/updateLocation', function(req,res){
         profiles.updateLocation('juzek','asdasdasd', 2.0, 2.0);
         res.send("ok");
 });
-
+/**
+ * Returns a list of buddies
+ */
 app.get('/getBuddies', function(req,res){
-        
+       profiles.getBuddies('juzek','elohaselo',0.11,
+       function(rows){
+           res.send(JSON.stringify(rows));
+       }); 
 });
-
+/**
+ * Registers a new user
+ */
 app.get('/register/:username/:password:/:email',function(req,res){
         profiles.registerNewUser(req.params.username, req.params.password, req.params.email);
         res.send("registered");
 });
 
-
+/**
+ * Archaic method for testing, returning some dummy location data
+ */
 app.get('/points',function(req,res){
 	res.send(JSON.stringify(points));
 	console.log(req.ip);
 });
 
+/**
+ * Dummy locations for /points
+ * @type Array
+ */
 points = [
 {Latitude: -8.84928155, Longitude: -168.52554438},
 {Latitude: 28.80520298, Longitude: 147.79418732},

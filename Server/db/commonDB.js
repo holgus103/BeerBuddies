@@ -1,5 +1,8 @@
+// external dependencies
 var pg = require('pg');
+// glob module
 var glob = require('../commonGlobal');
+
 module.exports = {
     connectionString: "postgres://beerbuddy:qwe123@localhost/beerbuddies",
     
