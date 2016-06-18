@@ -2,6 +2,8 @@
 var glob = require('../commonGlobal');
 // dbCommon module
 var dbCommon = require('./commonDB');
+// location module
+var locations = require('./locations');
 
 module.exports = {
     /**
@@ -27,14 +29,8 @@ module.exports = {
      */      
     updateLocation: function(username, password, longitude, latitude, callback){
         dbCommon.authenticate(username, password, function(rows){
-            dbCommon.handleQuery(
-                    'UPDATE "BeerBuddy".LOCATIONS SET isCurrent = \'0\' WHERE "BeerBuddy".LOCATIONS.profileId = $1::int AND isCurrent = \'1\'',
-                    [rows[0].profileid],
-                    null);
-            dbCommon.handleQuery(
-                    'INSERT INTO "BeerBuddy".LOCATIONS(profileId, longitude, latitude, updateTime,isCurrent) VALUES($1::int, $2::float8, $3::float8, $4::timestamp, \'1\')',
-                    [rows[0].profileid, longitude, latitude, new Date()],
-                    callback);
+            locations.setLocationsAsOutdated(rows[0].profileid, callback);
+            locations.addNewProfileLocation(rows[0].profileid, longitude, latitude, callback);
         });
     },
     /**

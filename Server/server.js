@@ -33,6 +33,9 @@ app.get('/register/:username/:password:/:email',function(req,res){
         res.send("registered");
 });
 
+app.get('/message', function(){
+        
+});
 /**
  * Archaic method for testing, returning some dummy location data
  */
