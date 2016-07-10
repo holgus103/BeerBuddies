@@ -3,7 +3,9 @@ var express = require('express');
 var app = express();
 // profile module
 var profiles = require('./db/profiles.js');
-
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/',function(req,res){
 	//profiles.loginUser("juzek","elohaselo");
@@ -13,14 +15,14 @@ app.get('/',function(req,res){
  * Updates user location
  */
 app.get('/updateLocation', function(req,res){
-        profiles.updateLocation('juzek','asdasdasd', 2.0, 2.0);
+        profiles.updateLocation(req.params.username,req.params.password,req.params.longitude, req.params.latitude);
         res.send("ok");
 });
 /**
  * Returns a list of buddies
  */
-app.get('/getBuddies', function(req,res){
-       profiles.getBuddies('juzek','elohaselo',0.11,
+app.post('/getBuddies', function(req,res){
+       profiles.getProfilesByDistance(req.body.username, req.body.password, req.body.distance,
        function(rows){
            res.send(JSON.stringify(rows));
        }); 

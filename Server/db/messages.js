@@ -12,7 +12,7 @@ module.exports = {
          * @param {type} callback
          * @returns {undefined}
          */
-        sendMessage: function(profileId, meetindId , body, callback){
+        sendMessage: function(profileId, meetindId, body, callback){
             dbCommon.handleQuery('INSERT INTO "BeerBuddy".MESSAGES(senderid, "time", content, meetingid) VALUES($1::int, $2::timestamp, $3::varchar, $4::int)',
             [profileId, meetindId, body, new Date()],
             callback);

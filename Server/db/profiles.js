@@ -19,6 +19,7 @@ module.exports = {
                 [username.toString(), mail.toString(), password.toString()],
                 callback);
     },
+    
     /**
      * Sets other user locations as outdated and adds new location that is set to current
      * @param {type} username
@@ -33,6 +34,7 @@ module.exports = {
             locations.addNewProfileLocation(rows[0].profileid, longitude, latitude, callback);
         });
     },
+    
     /**
      * Returns all budies with the current distance square
      * @param {type} username
@@ -40,7 +42,7 @@ module.exports = {
      * @param {type} distance
      * @returns {undefined}
      */
-    getBuddies: function(username, password, distance, callback){
+    getProfilesByDistance: function(username, password, distance, callback){
         dbCommon.authenticate(username, password, function(rows){
             dbCommon.handleQuery(
                     'SELECT longitude, latitude, username FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId!= $1::int \n\

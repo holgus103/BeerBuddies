@@ -26,6 +26,7 @@ module.exports = {
             });            
         });
     },
+    
     /**
      * Provides credential check and executes the callback on success
      * @param {type} username 

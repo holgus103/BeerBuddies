@@ -42,65 +42,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    private class DownloadBuddies extends AsyncTask<String,Void, String>{
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                return this.downloadData(params[0]);
-            }
-            catch(IOException e) {
-                return null;
-            }
-        }
-        private String downloadData(String address) throws IOException{
-            BufferedReader is = null;
-            try {
-                URL url = new URL(address);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(10000);
-                connection.setReadTimeout(2000);
-                connection.setDoInput(true);
-                connection.setRequestMethod("GET");
-                connection.connect();
-                int response = connection.getResponseCode();
-                Log.d("DEBUG", "" + response);
-                is = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                return is.readLine();
-            }
-            finally{
-                if(is!= null) {
-                    is.close();
-                }
-            }
 
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if(s!=null) {
-                try {
-                    JSONArray points = new JSONArray(s);
-                    for (int i = 0; i < points.length(); i++) {
-                        JSONObject val = points.getJSONObject(i);
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(val.getDouble("Latitude"), val.getDouble("Longitude"))).title("Marker " + i));
-                    }
-                } catch (JSONException e) {
-                    Log.d("JSON", "Not a JSON String");
-                }
-            }
-        }
-    }
-    private void loadMarkers(){
-        NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        if(netInfo != null && netInfo.isConnected()){
-            new DownloadBuddies().execute("http://192.168.18.101:3000/points");
-        }
-        else{
-            Log.d("NET","no connection");
-        }
-    }
+//    private void loadMarkers(){
+//        NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+//        if(netInfo != null && netInfo.isConnected()){
+//            new DownloadBuddies().execute("http://192.168.18.101:3000/points");
+//        }
+//        else{
+//            Log.d("NET","no connection");
+//        }
+//    }
     protected synchronized void buildGoogleApiClient() {
         this.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -164,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
-        this.loadMarkers();
+//        this.loadMarkers();
         // Add a marker in Sydney and move the camera
 //        getLastLo
     }
