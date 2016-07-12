@@ -27,7 +27,7 @@ module.exports = {
          */
         addNewProfileLocation: function(profileId, longitude, latitude, callback){
              dbCommon.handleQuery(
-                    'INSERT INTO "BeerBuddy".LOCATIONS(profileId, longitude, latitude, updateTime,isCurrent) VALUES($1::int, $2::float8, $3::float8, $4::timestamp, \'1\')',
+                    'INSERT INTO "BeerBuddy".LOCATIONS(profileId, longitude, latitude, updateTime,isCurrent) VALUES($1::int, $2::float8, $3::float8, $4::timestamp, \'1\') RETURNING longitude, latitude',
                     [profileId, longitude, latitude, new Date()],
                     callback);
         }

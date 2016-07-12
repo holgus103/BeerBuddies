@@ -27,26 +27,5 @@ module.exports = {
         });
     },
     
-    /**
-     * Provides credential check and executes the callback on success
-     * @param {type} username 
-     * @param {type} password
-     * @param {type} callback
-     * @returns {undefined}
-     */
-    authenticate: function(username, password, callback){
-        var client = new pg.Client(this.connectionString);
-        client.connect(function(err){
-            client.query('SELECT * from "BeerBuddy".PROFILES where username = $1::VARCHAR and password = $2::VARCHAR',[username,password],
-            function(err,result){
-               if(err){
-                   glob.logError(err);
-               } 
-               client.end();
-               if(callback != null && result.rowCount !=0)
-                    callback(result.rows);
-            });
-        });
-    }
 }
 

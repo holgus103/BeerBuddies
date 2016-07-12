@@ -7,6 +7,26 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(function(req, res, next){
+    if(req.body.username == null || req.body.password == null){
+        // no credentials supplied
+        res.send("FORBIDDEN!")
+        res.end();
+    }
+    else{
+         profiles.authenticate(req.body.username, req.body.password,
+         function(rows){
+             if(rows.length > 0){
+                req.profileid = rows[0].profileid;
+                next();
+            }
+            else{
+                res.send("FORBIDDEN!")
+                res.end();
+            }
+         })
+    }
+})
 app.get('/',function(req,res){
 	//profiles.loginUser("juzek","elohaselo");
         res.send("not available");
@@ -14,15 +34,16 @@ app.get('/',function(req,res){
 /**
  * Updates user location
  */
-app.get('/updateLocation', function(req,res){
-        profiles.updateLocation(req.params.username,req.params.password,req.params.longitude, req.params.latitude);
-        res.send("ok");
+app.post('/updateLocation', function(req,res){
+        profiles.updateLocation(req.profileid,req.body.longitude, req.body.latitude, function(){
+            res.send(JSON.stringify(rows[0]));
+        });
 });
 /**
  * Returns a list of buddies
  */
 app.post('/getBuddies', function(req,res){
-       profiles.getProfilesByDistance(req.body.username, req.body.password, req.body.distance,
+       profiles.getProfilesByDistance(req.profileid, req.body.distance,
        function(rows){
            res.send(JSON.stringify(rows));
        }); 

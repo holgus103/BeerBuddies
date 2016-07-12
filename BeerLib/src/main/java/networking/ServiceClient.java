@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,6 +34,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
 
     private class Routes{
         public static final String GET_BUDDIES = "/getBuddies";
+        public static final String UPDATE_LOCATION = "/updateLocation";
     }
 
     private static final String SERVER_ADDRESS = "http://localhost:3000";
@@ -48,9 +50,9 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         map.put(Parameters.PASSWORD, this.password);
     }
     private String communicate(String route, HashMap<String,String> params){
+        HttpURLConnection connection;
         try {
             URL url = new URL(ServiceClient.SERVER_ADDRESS + route);
-            HttpURLConnection connection;
 
             // create a post data object
             StringBuilder builder = new StringBuilder();
@@ -76,6 +78,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
             connection.setConnectTimeout(ServiceClient.CONNECTION_TIMEOUT);
             connection.setReadTimeout(ServiceClient.READ_TIMEOUT);
             connection.setDoOutput(true);
+            connection.setDoInput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", String.valueOf(postData.length));
             connection.getOutputStream().write(postData);
@@ -85,7 +88,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
             for(int c; (c = in.read()) >= 0;){
                 builder.append((char)c);
             }
-
+            connection.disconnect();
             return builder.toString();
 
         }
@@ -105,14 +108,12 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
 
     }
 
-    public bool updateLocation(Double longitude, Double latitude){
+    public JSONObject updateLocation(Double longitude, Double latitude){
        HashMap<String, String> map = new HashMap<String, String>();
        this.appendCredentials(map);
        map.put(Parameters.LONGITUDE, longitude.toString());
        map.put(Parameters.LATITUDE, latitude.toString());
-       String tmp = 
-       return this.communicate(Routes.GET_BUDDIES, map);
-       
+       return new JSONObject(this.communicate(Routes.UPDATE_LOCATION, map));
     }
 
     public void createMeeting(){

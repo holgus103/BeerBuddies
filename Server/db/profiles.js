@@ -7,6 +7,20 @@ var locations = require('./locations');
 
 module.exports = {
     /**
+     * Provides credential check and executes the callback on success
+     * @param {type} username 
+     * @param {type} password
+     * @param {type} callback
+     * @returns {undefined}
+     */
+    authenticate: function(username, password, callback){
+        dbCommon.handleQuery('SELECT * from "BeerBuddy".PROFILES where username = $1::VARCHAR and password = $2::VARCHAR',[username, password],
+        function(rows){
+            callback(rows);
+        })
+
+    },
+    /**
      * Registers a new user 
      * @param {type} username
      * @param {type} password
@@ -28,11 +42,10 @@ module.exports = {
      * @param {type} latitude
      * @returns {undefined}
      */      
-    updateLocation: function(username, password, longitude, latitude, callback){
-        dbCommon.authenticate(username, password, function(rows){
-            locations.setLocationsAsOutdated(rows[0].profileid, callback);
-            locations.addNewProfileLocation(rows[0].profileid, longitude, latitude, callback);
-        });
+    updateLocation: function(profileid, longitude, latitude, callback){
+            locations.setLocationsAsOutdated(profileid, function(){
+                locations.addNewProfileLocation(profileid, longitude, latitude, callback);
+            });
     },
     
     /**
@@ -42,16 +55,14 @@ module.exports = {
      * @param {type} distance
      * @returns {undefined}
      */
-    getProfilesByDistance: function(username, password, distance, callback){
-        dbCommon.authenticate(username, password, function(rows){
+    getProfilesByDistance: function(profileid, distance, callback){
             dbCommon.handleQuery(
                     'SELECT longitude, latitude, username FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId!= $1::int \n\
                     AND @(longitude - (select longitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId = $1::int)) < $2::float8\n\
                     AND @(latitude - (select latitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileID = $1::int)) < $2::float8',
-                    [rows[0].profileid, distance],
+                    [profileid, distance],
                     callback
                     );
-        });
     }
     
 }
