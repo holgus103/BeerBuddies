@@ -10,5 +10,13 @@ module.exports = {
         if(this.debug){
             console.log(err);
         }
-    }
+    },
+    routes: {
+        UPDATE_LOCATION: '/updateLocation',
+        REGISTER: '/register',
+        GET_BUDDIES: '/getBuddies',
+        SEND_MESSAGE: '/sendMessage'
+    },
+    OkResponse: {status: 1}
+    
 }

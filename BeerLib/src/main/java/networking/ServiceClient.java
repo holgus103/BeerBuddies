@@ -27,6 +27,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
     private class Parameters{
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String EMAIL = "email";
         public static final String DISTANCE = "distance";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
@@ -35,6 +36,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
     private class Routes{
         public static final String GET_BUDDIES = "/getBuddies";
         public static final String UPDATE_LOCATION = "/updateLocation";
+        public static final String REGISTER = "/register";
     }
 
     private static final String SERVER_ADDRESS = "http://localhost:3000";
@@ -116,8 +118,18 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
        return new JSONObject(this.communicate(Routes.UPDATE_LOCATION, map));
     }
 
+    public JSONObject register(String username, String password, String email){
+       HashMap<String, String> map = new HashMap<String, String>();
+       map.put(Parameters.USERNAME, username);
+       this.username = username;
+       map.put(Parameters.PASSWORD, password);
+       this.password = password;
+       map.put(Parameters.EMAIL, email);
+       return new JSONObject(this.communicate(Routes.REGISTER, map));
+    }
+    
     public void createMeeting(){
-
+//       HashMap<String, String> amp
     }
 
     public void getMeetings(){
