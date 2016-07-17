@@ -15,7 +15,8 @@ module.exports = {
         UPDATE_LOCATION: '/updateLocation',
         REGISTER: '/register',
         GET_BUDDIES: '/getBuddies',
-        SEND_MESSAGE: '/sendMessage'
+        SEND_MESSAGE: '/sendMessage',
+        CREATE_MEETING: '/createMeeting'
     },
     OkResponse: {status: 1}
     

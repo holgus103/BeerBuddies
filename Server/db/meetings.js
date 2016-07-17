@@ -14,8 +14,10 @@ module.exports = {
      * @returns {undefined}
      */
     createMeeting: function(profileId, start, end, type, callback){
+//        var st = new Date(start);
+//        var en = new Date(end);
         dbCommon.handleQuery('INSERT INTO "BeerBuddy".MEETINGS(ownerid, meetingstart, meetingend, type) VALUES($1::int, $2::timestamp, $3::timestamp, $4::smallint)',
-        [profileId, start, end, type],
+        [profileId, new Date(start).toGMTString(), new Date(end).toGMTString(), type],
         callback);
     },
     
@@ -30,6 +32,7 @@ module.exports = {
         [profileId, new Date()],
         callback);
     },
+    
     /**
      * 
      * @returns {undefined}

@@ -4,6 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 // profile module
 var profiles = require('./db/profiles.js');
+var meetings = require('./db/meetings.js');
 var global = require('./commonGlobal.js');
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -55,15 +56,18 @@ app.post(global.routes.GET_BUDDIES, function(req,res){
 /**
  * Registers a new user
  */
-app.post(global.routes.REGISTER,function(req,res){
+app.post(global.routes.REGISTER,function(req, res){
         profiles.registerNewUser(req.body.username, req.body.password, req.body.email, 
         function(rows){
-            res.send(JSON.stringify(global.OkResponse))
+            res.send(JSON.stringify(global.OkResponse));
         });
 });
 
-app.get('/message', function(){
-        
+app.post(global.routes.CREATE_MEETING, function(req, res){
+        meetings.createMeeting(req.profileid, req.body.meetingStart, req.body.meetingStop, req.body.meetingType,
+        function(rows){
+            res.send(JSON.stringify(global.OkResponse));
+        })
 });
 
 app.listen(3000);

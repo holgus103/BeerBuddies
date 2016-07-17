@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
@@ -31,12 +32,18 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         public static final String DISTANCE = "distance";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
+        public static final String MEETING_START = "meetingStart";
+        public static final String MEETING_STOP = "meetingStop";
+        public static final String MEETING_TYPE = "meetingType";
+        
     }
 
     private class Routes{
         public static final String GET_BUDDIES = "/getBuddies";
         public static final String UPDATE_LOCATION = "/updateLocation";
         public static final String REGISTER = "/register";
+        public static final String CTEATE_MEETING = "/createMeeting";
+        
     }
 
     private static final String SERVER_ADDRESS = "http://localhost:3000";
@@ -128,8 +135,14 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
        return new JSONObject(this.communicate(Routes.REGISTER, map));
     }
     
-    public void createMeeting(){
-//       HashMap<String, String> amp
+    public JSONObject createMeeting(Date start, Date end, Short type){
+       if(!start.before(end)) return null;
+       HashMap<String, String> map = new HashMap<String,String>();
+       this.appendCredentials(map);
+       map.put(Parameters.MEETING_START, start.toGMTString());
+       map.put(Parameters.MEETING_STOP, end.toGMTString());
+       map.put(Parameters.MEETING_TYPE, type.toString());
+       return new JSONObject(this.communicate(Routes.CTEATE_MEETING, map));
     }
 
     public void getMeetings(){

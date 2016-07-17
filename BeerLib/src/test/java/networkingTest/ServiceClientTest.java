@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import networking.ServiceClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,15 +56,15 @@ public class ServiceClientTest {
     
     @Test
     public void updateLocationTest(){
-            double[] res = new double[2];
-            double[] exp = {10.0, 10.0};
-            JSONObject obj = this.client.updateLocation(10.0, 10.0);
+            double lat = 10.0;
+            double lon = 10.0;
+            JSONObject obj = this.client.updateLocation(lon, lat);
             try{
                 if(Integer.parseInt(obj.get("status").toString()) == 1){
                     Statement st = ServiceClientTest.con.createStatement();
-                    ResultSet rs = st.executeQuery("select * from \"BeerBuddy\".locations l join \"BeerBuddy\".profiles p on l.profileid = p.profileid where iscurrent = '1'");
-                    rs.next();
-                    Assert.assertTrue(rs.getDouble("longitude") == 10.0 && rs.getDouble("latitude") == 10.0);
+                    ResultSet rs = st.executeQuery("select * from \"BeerBuddy\".locations l join \"BeerBuddy\".profiles p on l.profileid = p.profileid where iscurrent = '1' and" +
+                            " latitude = " + lat + " and longitude = " + lon );
+                    Assert.assertTrue(rs.next());
                 }
                 else{
                     Assert.fail();
@@ -90,5 +91,33 @@ public class ServiceClientTest {
             Assert.fail();
         }
        
+    }
+    
+    @Test
+    public void createMeetingWithInvalidDateTest(){
+        JSONObject obj = this.client.createMeeting(new Date(26, 9, 12), new Date(26, 9, 11), (short)0);
+        Assert.assertNull(obj);
+    }
+    
+    @Test
+    public void createMeetingTest(){
+        Date start = new Date(115, 9, 11);
+        Date end = new Date(116, 9, 12);
+        short type = 0;
+        JSONObject obj = this.client.createMeeting(start, end, type);
+        if(Integer.parseInt(obj.get("status").toString()) == 1){
+            try{
+                Statement statement = ServiceClientTest.con.createStatement();
+                ResultSet rs = statement.executeQuery("SELECT * from \"BeerBuddy\".MEETINGS where meetingstart = '" + start.toGMTString() + "' and meetingend = '" + end.toGMTString() + "' and type = " + type);
+                Assert.assertTrue(rs.next());
+                statement.execute("DELETE from \"BeerBuddy\".MEETINGS where meetingstart = '" + start.toGMTString() + "' and meetingend = '" + end.toGMTString() + "' and type = " + type);
+            }
+            catch(SQLException e){
+                Assert.fail();
+            }
+        }
+        else{
+            Assert.fail();
+        }
     }
 }
