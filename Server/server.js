@@ -31,7 +31,7 @@ app.use(function(req, res, next){
                     res.send("FORBIDDEN!")
                     res.end();
                 }
-             })
+             });
         }
     }
 })
@@ -67,7 +67,14 @@ app.post(global.routes.CREATE_MEETING, function(req, res){
         meetings.createMeeting(req.profileid, req.body.meetingStart, req.body.meetingStop, req.body.meetingType,
         function(rows){
             res.send(JSON.stringify(global.OkResponse));
-        })
+        });
+});
+
+app.post(global.routes.GET_MEETINGS, function(req, res){
+        meetings.getMeetings(req.profileid, req.body.distance, 
+        function(rows){
+            res.send(JSON.stringify(rows));
+        });
 });
 
 app.listen(3000);

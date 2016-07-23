@@ -14,8 +14,6 @@ module.exports = {
      * @returns {undefined}
      */
     createMeeting: function(profileId, start, end, type, callback){
-//        var st = new Date(start);
-//        var en = new Date(end);
         dbCommon.handleQuery('INSERT INTO "BeerBuddy".MEETINGS(ownerid, meetingstart, meetingend, type) VALUES($1::int, $2::timestamp, $3::timestamp, $4::smallint)',
         [profileId, new Date(start).toGMTString(), new Date(end).toGMTString(), type],
         callback);
@@ -28,23 +26,33 @@ module.exports = {
      * @returns {undefined}
      */
     getOpenMeetingsForUser: function(profileId, callback){
-        dbCommon.handleQuery('SELECT * FROM "BeerBuddy".MEETINGS WHERE profileId = $1::int AND end > $2::timestamp',
-        [profileId, new Date()],
+        dbCommon.handleQuery('SELECT * FROM "BeerBuddy".MEETINGS WHERE profileId = $1::int AND meetingend > now()',
+        [profileId, ],
         callback);
     },
     
     /**
      * 
+     * @param {type} profileId
+     * @param {type} distance
+     * @param {type} callback
      * @returns {undefined}
      */
-    getMeetingsByDistance: function(){
+    getMeetings: function(profileId, distance, callback){
         dbCommon.handleQuery(
-                    'SELECT longitude, latitude, start, end, type FROM "BeerBuddy".locations l JOIN "BeerBuddy".meetings m ON l.profileId = m.ownerId WHERE l.isCurrent = \'1\' AND l.profileId!= $1::int \n\
-                    AND @(longitude - (select longitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId = $1::int)) < $2::float8\n\
-                    AND @(latitude - (select latitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileID = $1::int)) < $2::float8',
-                    [rows[0].profileid, distance],
-                    callback
-                    );
+                    'SELECT meetingid, longitude, latitude, start, end, type FROM "BeerBuddy".locations l JOIN "BeerBuddy".meetings m ON l.profileId = m.ownerId WHERE l.isCurrent = \'1\' \n\
+                    AND @(l.longitude - (select longitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileId = $1::int)) < $2::float8\n\
+                    AND @(latitude - (select latitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileID = $1::int)) < $2::float8\n\
+                    AND end > now()',
+                    [profileId, distance],
+                    callback);
+    },
+    
+    joinMeeting: function(profileId, meetingId, callback){
+        dbCommon.handleQuery(
+                'INSERT INTO "BeerBuddy".profiletomeetings(meetingId, profileId) VALUES($1::int, $2::int)',
+                [meetingId, profileId],
+                callback);
     }
     
     

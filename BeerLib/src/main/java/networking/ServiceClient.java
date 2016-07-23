@@ -43,16 +43,17 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         public static final String UPDATE_LOCATION = "/updateLocation";
         public static final String REGISTER = "/register";
         public static final String CTEATE_MEETING = "/createMeeting";
+        public static final String GET_MEETINGS = "/getMeetings";
         
     }
 
-    private static final String SERVER_ADDRESS = "http://localhost:3000";
     private static final int CONNECTION_TIMEOUT = 3000;
     private static final int READ_TIMEOUT = 3000;
     private static final boolean SSL_ENABLED = false;
+    private static final String SERVER_ADDRESS = "http://localhost:3000";
 
-    private String username = "juzek";
-    private String password = "elohaselo";
+    private String username;
+    private String password;
 
     private void appendCredentials(HashMap<String, String> map){
         map.put(Parameters.USERNAME, this.username);
@@ -108,7 +109,15 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
             return null;
         }
     }
-
+    public ServiceClient(){
+        
+    }
+    
+    public ServiceClient(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
+    
     public JSONArray getBuddies(Double distance) throws JSONException{
         HashMap<String,String> map = new HashMap<String,String>();
         this.appendCredentials(map);
@@ -145,8 +154,11 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
        return new JSONObject(this.communicate(Routes.CTEATE_MEETING, map));
     }
 
-    public void getMeetings(){
-
+    public JSONArray getMeetings(Double distance){
+        HashMap<String, String> map = new HashMap<String, String>();
+        this.appendCredentials(map);
+        map.put(Parameters.DISTANCE, distance.toString());
+        return new JSONArray(this.communicate(Routes.GET_MEETINGS, map));
     }
 
     public void sendMessageOnMeeting(){

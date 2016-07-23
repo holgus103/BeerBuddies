@@ -16,7 +16,8 @@ module.exports = {
         REGISTER: '/register',
         GET_BUDDIES: '/getBuddies',
         SEND_MESSAGE: '/sendMessage',
-        CREATE_MEETING: '/createMeeting'
+        CREATE_MEETING: '/createMeeting',
+        GET_MEETINGS: '/getMeetings'
     },
     OkResponse: {status: 1}
     

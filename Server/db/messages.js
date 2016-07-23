@@ -14,7 +14,7 @@ module.exports = {
          */
         sendMessage: function(profileId, meetindId, body, callback){
             dbCommon.handleQuery('INSERT INTO "BeerBuddy".MESSAGES(senderid, "time", content, meetingid) VALUES($1::int, $2::timestamp, $3::varchar, $4::int)',
-            [profileId, meetindId, body, new Date()],
+            [profileId, meetindId, body, new Date().toGMTString()],
             callback);
             
         },
@@ -28,7 +28,7 @@ module.exports = {
          */
         getMessagesForMeeting: function(meetingId, date, callback){
             dbCommon.handleQuery('SELECT * FROM "BeerBuddy".MESSAGES WHERE meetingId = $1::int AND "time" > $2::timestamp',
-            [meetingId, date],
+            [meetingId, new Date(date).toGMTString()],
             callback);
         }
 }
