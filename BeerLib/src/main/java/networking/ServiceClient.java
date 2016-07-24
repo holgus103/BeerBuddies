@@ -35,6 +35,9 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         public static final String MEETING_START = "meetingStart";
         public static final String MEETING_STOP = "meetingStop";
         public static final String MEETING_TYPE = "meetingType";
+        public static final String MEETING_ID = "meetingId";
+             
+        
         
     }
 
@@ -44,6 +47,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         public static final String REGISTER = "/register";
         public static final String CTEATE_MEETING = "/createMeeting";
         public static final String GET_MEETINGS = "/getMeetings";
+        public static final String JOIN_MEETING = "/joinMeeting";
         
     }
 
@@ -159,6 +163,13 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         this.appendCredentials(map);
         map.put(Parameters.DISTANCE, distance.toString());
         return new JSONArray(this.communicate(Routes.GET_MEETINGS, map));
+    }
+    
+    public JSONObject joinMeeting(Integer meetingId){
+        HashMap<String, String> map = new HashMap<String, String>();
+        this.appendCredentials(map);
+        map.put(Parameters.MEETING_ID, meetingId.toString());
+        return new JSONObject(this.communicate(Routes.JOIN_MEETING, map));
     }
 
     public void sendMessageOnMeeting(){

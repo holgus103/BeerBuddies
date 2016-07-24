@@ -10,13 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 import networking.ServiceClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +30,8 @@ public class RegisteredTests {
     private static Connection con;
     private static Statement statement;
     private static int userId;
+    private static int validMeeting;
+    private static int invalidMeeting;
     private static ArrayList<Integer> dummyUsers = new ArrayList<Integer>();
     private static ServiceClient client;
     
@@ -67,13 +64,19 @@ public class RegisteredTests {
             }
             // spawn actual meetings 
             for(int i = 0; i<5; i++){
-                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i) + ", now(), now() + interval '1 day', 0)");
+                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i+1) + ", now(), now() + interval '1 day', 0)");
             }
             
             // spawn expired meetings
             for(int i = 0; i<5; i++){
-                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i) + ", now() - interval '10 day', now() - interval '8 day', 0)");
+                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i+1) + ", now() - interval '10 day', now() - interval '8 day', 0)");
             }
+            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(dummyUsers.get(1)) + ", now(), now() + interval '1 day', 0) returning meetingid");
+            rs.next();
+            RegisteredTests.validMeeting = rs.getInt("meetingId");
+            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(dummyUsers.get(1)) + ", now(), now() + interval '1 day', 0) returning meetingid");
+            rs.next();
+            RegisteredTests.validMeeting = rs.getInt("meetingId");
         }
         catch(Exception e){
             System.out.printf(e.getMessage());
@@ -85,7 +88,7 @@ public class RegisteredTests {
         try{
             JSONArray tmp = RegisteredTests.client.getBuddies(10.0);
             if(tmp != null)
-                Assert.assertTrue(tmp.length() > 0);
+                Assert.assertTrue(tmp.length() == 11);
             else
                 Assert.fail();
         }
@@ -110,10 +113,7 @@ public class RegisteredTests {
                     Assert.fail();
                 }
             }
-            catch(NullPointerException e){
-                Assert.fail();
-            }
-            catch(SQLException e){
+            catch(NullPointerException | SQLException e){
                 Assert.fail();
             }
     }
@@ -149,9 +149,39 @@ public class RegisteredTests {
     public void getMeetingsFilterByTimeTest(){
         JSONArray arr = RegisteredTests.client.getMeetings(10.0);
         if(arr != null)
-            Assert.assertTrue(arr.length() >= 5);
+            Assert.assertTrue(arr.length() == 5);
         else
             Assert.fail();
+    }
+    
+    @Test
+    public void joinValidMeetingTest(){
+        JSONObject obj = RegisteredTests.client.joinMeeting(validMeeting);
+        if(Integer.parseInt(obj.get("status").toString()) == 1){
+            try{
+                ResultSet rs = statement.executeQuery("SELECT * FROM \"BeerBuddy\".profilestomeetings where meetingId = " + validMeeting);
+                Assert.assertTrue(rs.next());
+            }
+            catch(SQLException e){
+                Assert.fail();
+            }
+        }
+
+    }
+    
+    @Test
+    public void joinInvalidMeetingTest(){
+        JSONObject obj = RegisteredTests.client.joinMeeting(validMeeting);
+        if(Integer.parseInt(obj.get("status").toString()) == 1){
+            try{
+                ResultSet rs = statement.executeQuery("SELECT * FROM \"BeerBuddy\".profilestomeetings where meetingId = " + validMeeting);
+                Assert.assertFalse(rs.next());
+            }
+            catch(SQLException e){
+                Assert.fail();
+            }
+        }
+
     }
     
     @AfterClass

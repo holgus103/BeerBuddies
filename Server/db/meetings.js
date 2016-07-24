@@ -43,14 +43,15 @@ module.exports = {
                     'SELECT meetingid, longitude, latitude, meetingstart, meetingend, type FROM "BeerBuddy".locations l JOIN "BeerBuddy".meetings m ON l.profileId = m.ownerId WHERE l.isCurrent = \'1\' \n\
                     AND @(l.longitude - (select longitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileId = $1::int)) < $2::float8\n\
                     AND @(latitude - (select latitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileID = $1::int)) < $2::float8\n\
-                    AND meetingend > now()',
+                    AND meetingend > now() \n\
+                    AND m.ownerId != $1::int',
                     [profileId, distance],
                     callback);
     },
     
     joinMeeting: function(profileId, meetingId, callback){
         dbCommon.handleQuery(
-                'INSERT INTO "BeerBuddy".profiletomeetings(meetingId, profileId) VALUES($1::int, $2::int)',
+                'INSERT INTO "BeerBuddy".profilestomeetings(meetingId, profileId) VALUES($1::int, $2::int)',
                 [meetingId, profileId],
                 callback);
     }

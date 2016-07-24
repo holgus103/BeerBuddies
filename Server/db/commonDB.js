@@ -22,7 +22,7 @@ module.exports = {
                 }
                 client.end();
                 if(callback != null)
-                    callback(result == null ? null : result.rows);
+                    callback(result == null ? null : result.rows, err);
             });            
         });
     },

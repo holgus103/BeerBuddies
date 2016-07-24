@@ -11,14 +11,24 @@ module.exports = {
             console.log(err);
         }
     },
+    sendAck: function(res, err){
+        if(err){
+            res.send(JSON.stringify(this.FailResponse));
+        }
+        else{
+            res.send(JSON.stringify(this.OkResponse));
+        }
+    },
     routes: {
         UPDATE_LOCATION: '/updateLocation',
         REGISTER: '/register',
         GET_BUDDIES: '/getBuddies',
         SEND_MESSAGE: '/sendMessage',
         CREATE_MEETING: '/createMeeting',
-        GET_MEETINGS: '/getMeetings'
+        GET_MEETINGS: '/getMeetings',
+        JOIN_MEETING: '/joinMeeting'
     },
-    OkResponse: {status: 1}
+    OkResponse: {status: 1},
+    FailResponse: {status: 0}
     
 }

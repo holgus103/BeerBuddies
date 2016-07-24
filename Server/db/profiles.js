@@ -58,8 +58,8 @@ module.exports = {
     getProfilesByDistance: function(profileid, distance, callback){
             dbCommon.handleQuery(
                     'SELECT longitude, latitude, username FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId!= $1::int \n\
-                    AND @(longitude - (select longitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileId = $1::int)) < $2::float8\n\
-                    AND @(latitude - (select latitude FROM "BeerBuddy".locations l JOIN "BeerBuddy".profiles p ON l.profileId = p.profileId WHERE l.isCurrent = \'1\' AND p.profileID = $1::int)) < $2::float8',
+                    AND @(longitude - (select longitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileId = $1::int)) < $2::float8\n\
+                    AND @(latitude - (select latitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileID = $1::int)) < $2::float8',
                     [profileid, distance],
                     callback
                     );

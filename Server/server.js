@@ -22,7 +22,7 @@ app.use(function(req, res, next){
         }
         else{
             profiles.authenticate(req.body.username, req.body.password,
-            function(rows){
+            function(rows, err){
                  if(rows.length > 0){
                     req.profileid = rows[0].profileid;
                     next();
@@ -40,7 +40,8 @@ app.use(function(req, res, next){
  * Updates user location
  */
 app.post(global.routes.UPDATE_LOCATION, function(req,res){
-        profiles.updateLocation(req.profileid,req.body.longitude, req.body.latitude, function(rows){
+        profiles.updateLocation(req.profileid,req.body.longitude, req.body.latitude,
+        function(rows, err){
             res.send(JSON.stringify(global.OkResponse));
         });
 });
@@ -49,7 +50,7 @@ app.post(global.routes.UPDATE_LOCATION, function(req,res){
  */
 app.post(global.routes.GET_BUDDIES, function(req,res){
        profiles.getProfilesByDistance(req.profileid, req.body.distance,
-       function(rows){
+       function(rows, err){
            res.send(JSON.stringify(rows));
        }); 
 });
@@ -58,22 +59,29 @@ app.post(global.routes.GET_BUDDIES, function(req,res){
  */
 app.post(global.routes.REGISTER,function(req, res){
         profiles.registerNewUser(req.body.username, req.body.password, req.body.email, 
-        function(rows){
+        function(rows, err){
             res.send(JSON.stringify(global.OkResponse));
         });
 });
 
 app.post(global.routes.CREATE_MEETING, function(req, res){
         meetings.createMeeting(req.profileid, req.body.meetingStart, req.body.meetingStop, req.body.meetingType,
-        function(rows){
+        function(rows, err){
             res.send(JSON.stringify(global.OkResponse));
         });
 });
 
 app.post(global.routes.GET_MEETINGS, function(req, res){
         meetings.getMeetings(req.profileid, req.body.distance, 
-        function(rows){
+        function(rows, err){
             res.send(JSON.stringify(rows));
+        });
+});
+
+app.post(global.routes.JOIN_MEETING, function(req, res){
+        meetings.joinMeeting(req.profileid, req.body.meetingId,
+        function(rows, err){
+            global.sendAck(res, err);
         });
 });
 
