@@ -67,7 +67,12 @@ public class RegisteredTests {
             }
             // spawn actual meetings 
             for(int i = 0; i<5; i++){
-                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(profileId, longitude, latitude,isCurrent) VALUES(" + RegisteredTests.dummyUsers.get(i) + ", " + i + ", " + i + "'1')");
+                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i) + ", now(), now() + interval '1 day', 0)");
+            }
+            
+            // spawn expired meetings
+            for(int i = 0; i<5; i++){
+                statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i) + ", now() - interval '10 day', now() - interval '8 day', 0)");
             }
         }
         catch(Exception e){
@@ -121,8 +126,8 @@ public class RegisteredTests {
     
     @Test
     public void createMeetingTest(){
-        Date start = new Date(115, 9, 11);
-        Date end = new Date(116, 9, 12);
+        Date start = new Date(0, 0, 0);
+        Date end = new Date(1, 1, 1);
         short type = 0;
         JSONObject obj = RegisteredTests.client.createMeeting(start, end, type);
         if(Integer.parseInt(obj.get("status").toString()) == 1){
@@ -141,10 +146,10 @@ public class RegisteredTests {
     }
     
     @Test
-    public void getMeetingsTest(){
+    public void getMeetingsFilterByTimeTest(){
         JSONArray arr = RegisteredTests.client.getMeetings(10.0);
         if(arr != null)
-            Assert.assertTrue(arr.length() > 0);
+            Assert.assertTrue(arr.length() >= 5);
         else
             Assert.fail();
     }

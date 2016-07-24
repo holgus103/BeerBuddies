@@ -40,10 +40,10 @@ module.exports = {
      */
     getMeetings: function(profileId, distance, callback){
         dbCommon.handleQuery(
-                    'SELECT meetingid, longitude, latitude, start, end, type FROM "BeerBuddy".locations l JOIN "BeerBuddy".meetings m ON l.profileId = m.ownerId WHERE l.isCurrent = \'1\' \n\
+                    'SELECT meetingid, longitude, latitude, meetingstart, meetingend, type FROM "BeerBuddy".locations l JOIN "BeerBuddy".meetings m ON l.profileId = m.ownerId WHERE l.isCurrent = \'1\' \n\
                     AND @(l.longitude - (select longitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileId = $1::int)) < $2::float8\n\
                     AND @(latitude - (select latitude FROM "BeerBuddy".locations l WHERE l.isCurrent = \'1\' AND l.profileID = $1::int)) < $2::float8\n\
-                    AND end > now()',
+                    AND meetingend > now()',
                     [profileId, distance],
                     callback);
     },
