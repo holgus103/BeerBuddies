@@ -71,12 +71,12 @@ public class RegisteredTests {
             for(int i = 0; i<5; i++){
                 statement.execute("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(i+1) + ", now() - interval '10 day', now() - interval '8 day', 0)");
             }
-            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(dummyUsers.get(1)) + ", now(), now() + interval '1 day', 0) returning meetingid");
+            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(1) + ", now(), now() + interval '1 day', 0) returning meetingid");
             rs.next();
-            RegisteredTests.validMeeting = rs.getInt("meetingId");
-            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(dummyUsers.get(1)) + ", now(), now() + interval '1 day', 0) returning meetingid");
+            RegisteredTests.validMeeting = rs.getInt("meetingid");
+            rs = statement.executeQuery("INSERT INTO \"BeerBuddy\".MEETINGS(ownerId, meetingstart, meetingend, type) VALUES(" + RegisteredTests.dummyUsers.get(1) + ",now() - interval '10 day', now() - interval '8 day', 0) returning meetingid");
             rs.next();
-            RegisteredTests.validMeeting = rs.getInt("meetingId");
+            RegisteredTests.invalidMeeting = rs.getInt("meetingid");
         }
         catch(Exception e){
             System.out.printf(e.getMessage());
@@ -171,7 +171,7 @@ public class RegisteredTests {
     
     @Test
     public void joinInvalidMeetingTest(){
-        JSONObject obj = RegisteredTests.client.joinMeeting(validMeeting);
+        JSONObject obj = RegisteredTests.client.joinMeeting(invalidMeeting);
         if(Integer.parseInt(obj.get("status").toString()) == 1){
             try{
                 ResultSet rs = statement.executeQuery("SELECT * FROM \"BeerBuddy\".profilestomeetings where meetingId = " + validMeeting);
@@ -183,6 +183,8 @@ public class RegisteredTests {
         }
 
     }
+    
+    
     
     @AfterClass
     public static void destroy(){

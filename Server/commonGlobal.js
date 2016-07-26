@@ -24,6 +24,7 @@ module.exports = {
         REGISTER: '/register',
         GET_BUDDIES: '/getBuddies',
         SEND_MESSAGE: '/sendMessage',
+        GET_MESSAGES: '/getMessages',
         CREATE_MEETING: '/createMeeting',
         GET_MEETINGS: '/getMeetings',
         JOIN_MEETING: '/joinMeeting'

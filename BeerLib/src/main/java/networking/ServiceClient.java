@@ -45,14 +45,16 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
         public static final String GET_BUDDIES = "/getBuddies";
         public static final String UPDATE_LOCATION = "/updateLocation";
         public static final String REGISTER = "/register";
-        public static final String CTEATE_MEETING = "/createMeeting";
+        public static final String SEND_MESSAGE = "/sendMessage";
+        public static final String GET_MESSAGES = "/getMessage";        
+        public static final String CREATE_MEETING = "/createMeeting";
         public static final String GET_MEETINGS = "/getMeetings";
         public static final String JOIN_MEETING = "/joinMeeting";
         
     }
 
-    private static final int CONNECTION_TIMEOUT = 3000;
-    private static final int READ_TIMEOUT = 3000;
+    private static final int CONNECTION_TIMEOUT = 30000;
+    private static final int READ_TIMEOUT = 30000;
     private static final boolean SSL_ENABLED = false;
     private static final String SERVER_ADDRESS = "http://localhost:3000";
 
@@ -155,7 +157,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
        map.put(Parameters.MEETING_START, start.toGMTString());
        map.put(Parameters.MEETING_STOP, end.toGMTString());
        map.put(Parameters.MEETING_TYPE, type.toString());
-       return new JSONObject(this.communicate(Routes.CTEATE_MEETING, map));
+       return new JSONObject(this.communicate(Routes.CREATE_MEETING, map));
     }
 
     public JSONArray getMeetings(Double distance){

@@ -85,4 +85,6 @@ app.post(global.routes.JOIN_MEETING, function(req, res){
         });
 });
 
+app.post
+
 app.listen(3000);
