@@ -1,13 +1,8 @@
-package superapki.beerbuddies;
+package superapki.beerbuddies.activities;
 
-import android.content.Context;
 import android.location.Location;
-
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,22 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.net.ssl.HttpsURLConnection;
-
+import superapki.beerbuddies.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -43,15 +23,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
 
-//    private void loadMarkers(){
-//        NetworkInfo netInfo = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-//        if(netInfo != null && netInfo.isConnected()){
-//            new DownloadBuddies().execute("http://192.168.18.101:3000/points");
-//        }
-//        else{
-//            Log.d("NET","no connection");
-//        }
-//    }
     protected synchronized void buildGoogleApiClient() {
         this.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)

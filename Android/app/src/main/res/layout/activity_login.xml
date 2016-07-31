@@ -9,16 +9,49 @@
     android:orientation="vertical"
     android:gravity="center"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="superapki.beerbuddies.LoginActivity">
+    tools:context=".activities.LoginActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_msg"
         android:id="@+id/login_tvMsg"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="@string/etNameText"
+        android:ems="10"
+        android:id="@+id/etName"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/etPassword" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/etEmail" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btnRegisterText"
+        android:id="@+id/btnRegister"
+        android:layout_gravity="center_horizontal" />
+
+    <!--
     <com.google.android.gms.common.SignInButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSignIn">
        </com.google.android.gms.common.SignInButton>
+    -->
 
 </LinearLayout>

@@ -11,6 +11,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(function(req, res, next){
+    console.log(req.url);
     if(req.body.username == null || req.body.password == null){
         // no credentials supplied
         res.send("FORBIDDEN!")
@@ -85,6 +86,6 @@ app.post(global.routes.JOIN_MEETING, function(req, res){
         });
 });
 
-app.post
+//app.post
 
 app.listen(3000);

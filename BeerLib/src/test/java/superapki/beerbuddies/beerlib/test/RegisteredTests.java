@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package networkingTest;
+package superapki.beerbuddies.beerlib.test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import networking.ServiceClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +19,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import superapki.beerbuddies.beerlib.networking.ServiceClient;
 
 /**
  *

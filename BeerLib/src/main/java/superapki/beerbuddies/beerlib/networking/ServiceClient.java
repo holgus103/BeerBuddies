@@ -1,4 +1,4 @@
-package networking;
+package superapki.beerbuddies.beerlib.networking;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -56,8 +56,8 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
     private static final int CONNECTION_TIMEOUT = 30000;
     private static final int READ_TIMEOUT = 30000;
     private static final boolean SSL_ENABLED = false;
-    private static final String SERVER_ADDRESS = "http://localhost:3000";
-
+    
+    private String url = "http://localhost:3000";
     private String username;
     private String password;
 
@@ -68,7 +68,7 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
     private String communicate(String route, HashMap<String,String> params){
         HttpURLConnection connection;
         try {
-            URL url = new URL(ServiceClient.SERVER_ADDRESS + route);
+            URL url = new URL(this.url + route);
 
             // create a post data object
             StringBuilder builder = new StringBuilder();
@@ -122,6 +122,13 @@ public class ServiceClient {// extends AsyncTask<String,Void, String> {
     public ServiceClient(String username, String password){
         this.username = username;
         this.password = password;
+    }
+    
+    public ServiceClient(String username, String password, String url){
+        this.username = username;
+        this.password = password;
+        this.url = url;
+        
     }
     
     public JSONArray getBuddies(Double distance) throws JSONException{

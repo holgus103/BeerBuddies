@@ -1,8 +1,9 @@
-package superapki.beerbuddies;
+package superapki.beerbuddies.activities;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import superapki.beerbuddies.R;
+import superapki.beerbuddies.global.BeerBuddies;
+import superapki.beerbuddies.networking.NetworkTask;
+
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+
     private GoogleApiClient mApiClient;
     private static int RC_SIGN_IN = 9988;
     private GoogleSignInAccount mUserAcc;
@@ -57,14 +67,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //        BeerBuddies app = (BeerBuddies) getApplicationContext();
 //        app.client
         //Configure Google API
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        this.mApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        findViewById(R.id.btnSignIn).setOnClickListener(this);
+//zz
+//        findViewById(R.id.btnSignIn).setOnClickListener(this);
         //Facebook login leftovers
         //FacebookSdk.sdkInitialize(getApplicationContext());
 
@@ -75,12 +79,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.btnSignIn:
-                this.signIn();
-                break;
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch(v.getId()){
+//            case R.id.btnSignIn:
+//                this.signIn();
+//                break;
+//        }
+//    }
 }

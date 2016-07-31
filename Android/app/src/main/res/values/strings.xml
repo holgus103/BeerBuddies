@@ -9,5 +9,7 @@
     <string name="main_btnLogin">Log in</string>
     <string name="authentication_failure">Authentication failed</string>
     <string name="authentication_success">Great! Hi </string>
+    <string name="etNameText">Name</string>
+    <string name="btnRegisterText">Register</string>
     <!--<string name="server_client_id">433273849802-25f91ko57d5331nl4f8eqatd4tp3aldf.apps.googleusercontent.com</string>-->
 </resources>
