@@ -12,6 +12,12 @@
     android:gravity="center">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tvLogin" />
+
+    <TextView
         android:layout_marginTop="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,13 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_btnSearch"
-        android:id="@+id/btnStart"
-        android:onClick="startMap"
+        android:id="@+id/btnSearch"
         android:gravity="center" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_btnLogin"
-        android:onClick="startLogin"
-        />
 </LinearLayout>

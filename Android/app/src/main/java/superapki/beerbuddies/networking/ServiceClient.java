@@ -198,4 +198,8 @@ public class ServiceClient {
 
     }
 
+    public String getUsername(){
+        return this.username;
+    }
+
 }

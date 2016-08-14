@@ -12,18 +12,24 @@ import superapki.beerbuddies.networking.NetworkTask;
  * Created by Kuba on 2016-07-09.
  */
 public class BeerBuddies extends Application {
-//    public class AsyncRequest extends AsyncTask<NetworkTask<Void>, Void, Void> {
-//
-//        @Override
-//        protected Void doInBackground(NetworkTask<Void>... params) {
-//            switch(params[0].getType()){
-//                case REGISTER: client.register();
-//            }
-//        }
-//    }
-    private ServiceClient client = new ServiceClient(null, null, "http://192.168.18.120:3000");
+    private static BeerBuddies instance;
+    private ServiceClient client = new ServiceClient("TurboJude", "Jude" , "http://192.168.18.120:3000");
     public ServiceClient getClientInstance(){
         return this.client;
+    }
+    public boolean isAuthenticated(){
+        return true;
+    }
+
+    public String getUsername(){
+        return this.client.getUsername();
+    }
+
+    public static BeerBuddies getInstance(){
+        if(BeerBuddies.instance == null){
+            BeerBuddies.instance = new BeerBuddies();
+        }
+        return BeerBuddies.instance;
     }
 
 }

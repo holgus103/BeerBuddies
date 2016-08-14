@@ -2,80 +2,43 @@ package superapki.beerbuddies.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import superapki.beerbuddies.R;
-import superapki.beerbuddies.networking.ServiceClient;
 import superapki.beerbuddies.global.BeerBuddies;
 
-public class MainActivity extends AppCompatActivity {
-    public static String login;
-    public static String password;
-    public static String email;
-    public final static String EDIT_TEXT = "superapki.beerbuddies.MESSAGE";
+public class MainActivity extends BeerBuddiesActivity {
 
-    private class LoginSend extends AsyncTask<String, Void, JSONArray> {
-
-        @Override
-        protected JSONArray doInBackground(String... params) {
-            try {
-                return ((BeerBuddies) getApplication()).getClientInstance().register(params[0], params[1], params[2]);
-            }
-            catch(JSONException e){
-                Log.d("EXCEPTION", e.getMessage());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray arr){
-            // do sucess / failure logic here
-        }
-    }
-
-    private void register(){
-        this.login = ((EditText) findViewById(R.id.etName)).getText().toString();
-        this.password = ((EditText) findViewById(R.id.etPassword)).getText().toString();
-        this.email = ((EditText) findViewById(R.id.etEmail)).getText().toString();
-        new LoginSend().execute(this.login, this.password, this.email);
-
-
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(MainActivity.login == null && MainActivity.password == null) {
-            setContentView(R.layout.activity_login);
-            ((Button) findViewById(R.id.btnRegister))
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            register();
-                        }
-                    });
+        this.beerBuddies = BeerBuddies.getInstance();
+        if(!this.beerBuddies.isAuthenticated()) {
+            this.startActivity(LoginActivity.class);
         }
         else{
-            setContentView(R.layout.activity_main);
+            this.setContentView(R.layout.activity_main);
+            // prepare controls
+            TextView tvLogin = (TextView) findViewById(R.id.tvLogin);
+            tvLogin.setText(this.beerBuddies.getUsername());
+
+            Button searchButton = (Button) findViewById(R.id.btnSearch);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(MapsActivity.class);
+                }
+            });
         }
-    }
-
-    public void startMap(View view) {
-        Intent intent = new Intent(this,MapsActivity.class);
-//        EditText editText = (EditText) findViewById(R.id.acti);
-//        intent.putExtra(EDIT_TEXT,editText.getText().toString());
-        startActivity(intent);
-    }
-
-    public void startLogin(View view){
-        Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
     }
 }

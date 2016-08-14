@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.auth.api.Auth;
@@ -22,55 +24,70 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import superapki.beerbuddies.R;
 import superapki.beerbuddies.global.BeerBuddies;
 import superapki.beerbuddies.networking.NetworkTask;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends BeerBuddiesActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private BeerBuddies beerbuddies = (BeerBuddies) getApplication();
+    private String login;
+    private String password;
+    private String email;
 
-    private GoogleApiClient mApiClient;
-    private static int RC_SIGN_IN = 9988;
-    private GoogleSignInAccount mUserAcc;
+    private class LoginSend extends AsyncTask<String, Void, JSONArray> {
 
-    private void signIn(){
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mApiClient);
-        startActivityForResult(intent, this.RC_SIGN_IN);
+        @Override
+        protected JSONArray doInBackground(String... params) {
+            try {
+                return beerBuddies.getClientInstance().register(params[0], params[1], params[2]);
+            }
+            catch(JSONException e){
+                Log.d("EXCEPTION", e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray arr){
+            try {
+                JSONObject obj = (JSONObject) arr.get(0);
+                if(1 == (int) obj.get("status")){
+                    startActivity(MainActivity.class);
+                }
+                else{
+                    //handle failure
+                }
+            }
+            catch(JSONException e){
+
+            }
+
+        }
+    }
+
+    private void register(){
+        this.login = ((EditText) findViewById(R.id.etName)).getText().toString();
+        this.password = ((EditText) findViewById(R.id.etPassword)).getText().toString();
+        this.email = ((EditText) findViewById(R.id.etEmail)).getText().toString();
+        new LoginSend().execute(this.login, this.password, this.email);
+
 
     }
 
-    private void handleSignInResult(GoogleSignInResult result){
-        Log.d("google authentication", "result " + result.isSuccess());
-        TextView info = (TextView) findViewById(R.id.login_tvMsg);
-        if(result.isSuccess()){
-            this.mUserAcc = result.getSignInAccount();
-            info.setText(getString(R.string.authentication_success) + " " + this.mUserAcc.getDisplayName());
-        }
-        else{
-            info.setText(getString(R.string.authentication_failure));
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == this.RC_SIGN_IN){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            this.handleSignInResult(result);
-        }
-    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        BeerBuddies app = (BeerBuddies) getApplicationContext();
-//        app.client
-        //Configure Google API
-//zz
-//        findViewById(R.id.btnSignIn).setOnClickListener(this);
-        //Facebook login leftovers
-        //FacebookSdk.sdkInitialize(getApplicationContext());
+        ((Button) findViewById(R.id.btnRegister))
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        register();
+                    }
+                });
 
     }
 
@@ -79,12 +96,5 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch(v.getId()){
-//            case R.id.btnSignIn:
-//                this.signIn();
-//                break;
-//        }
-//    }
+
 }
