@@ -1,6 +1,7 @@
 package superapki.beerbuddies.activities;
 
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +20,10 @@ import superapki.beerbuddies.global.BeerBuddies;
 import superapki.beerbuddies.networking.NetworkTask;
 
 public class MainActivity extends BeerBuddiesActivity {
+    private static final float LOCATION_REFRESH_DISTANCE = 5000;
+    private static final long LOCATION_REFRESH_TIME = 120;
+    private LocationManager mLocationManager;
 
-    private class SendLocationUpdate extends NetworkTask{
-
-        @Override
-        protected JSONArray doWork(Object... params) throws JSONException {
-            return beerBuddies.getClientInstance().updateLocation((Double)params[0], (Double)params[1]);
-        }
-
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +31,9 @@ public class MainActivity extends BeerBuddiesActivity {
             this.startActivity(LoginActivity.class);
         }
         else{
+            this.mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
+                    LOCATION_REFRESH_DISTANCE, this.beerBuddies);
             this.setContentView(R.layout.activity_main);
             // prepare controls
             TextView tvLogin = (TextView) findViewById(R.id.tvLogin);

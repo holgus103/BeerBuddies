@@ -26,19 +26,19 @@ public abstract class NetworkTask extends AsyncTask<Object, Void, JSONArray>{
 
     @Override
     protected void onPostExecute(JSONArray arr){
-        try {
-            JSONObject obj = (JSONObject) arr.get(0);
-            if(1 == (int) obj.get("status")){
-                this.onSuccess(arr);
+        if(null != arr)
+            try {
+                JSONObject obj = (JSONObject) arr.get(0);
+                if(1 == (int) obj.get("status")){
+                    this.onSuccess(arr);
+                }
+                else{
+                    this.onFailure(arr);
+                }
             }
-            else{
-                this.onFailure(arr);
+            catch(JSONException e){
+                this.onException(e);
             }
-        }
-        catch(JSONException e){
-            this.onException(e);
-        }
-
     }
 
     @Override
