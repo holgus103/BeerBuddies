@@ -2,6 +2,7 @@ package superapki.beerbuddies.activities;
 
 import android.app.FragmentTransaction;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -16,10 +17,33 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import superapki.beerbuddies.R;
 
 public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+
+    private class GetBuddies extends AsyncTask<String, Void, JSONArray>{
+
+        @Override
+        protected JSONArray doInBackground(String... params) {
+            try {
+                return beerBuddies.getClientInstance().getBuddies(distance);
+            }
+            catch(JSONException e){
+                // handle incorrect data
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray arr){
+
+        }
+    }
+    private double distance = 5.0;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -40,23 +64,20 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) this.getSupportFragmentManager().findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-
     }
+
     @Override
     protected void onStart(){
         super.onStart();
-//        SupportMapFragment mapFragment = (SupportMapFragment) this.getSupportFragmentManager().findFragmentById(R.id.map);
         this.mGoogleApiClient.connect();
     }
+
     @Override
     protected void onStop(){
         super.onStop();
         this.mGoogleApiClient.disconnect();
     }
+
     @Override
     public void onConnected(Bundle var1) {
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -66,7 +87,7 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
             this.mMap.addMarker(new MarkerOptions().position(myLoc).title("Marker in mLocation"));
             this.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
         }
-        }
+    }
 
     @Override
     public void onConnectionSuspended(int var1) {

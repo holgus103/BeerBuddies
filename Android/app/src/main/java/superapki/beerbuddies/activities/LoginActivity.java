@@ -37,34 +37,26 @@ public class LoginActivity extends BeerBuddiesActivity implements GoogleApiClien
     private String password;
     private String email;
 
-    private class LoginSend extends AsyncTask<String, Void, JSONArray> {
+    private class LoginSend extends NetworkTask {
 
         @Override
-        protected JSONArray doInBackground(String... params) {
-            try {
-                return beerBuddies.getClientInstance().register(params[0], params[1], params[2]);
-            }
-            catch(JSONException e){
-                Log.d("EXCEPTION", e.getMessage());
-                return null;
-            }
+        protected void onFailure(JSONArray arr){
+
         }
 
         @Override
-        protected void onPostExecute(JSONArray arr){
-            try {
-                JSONObject obj = (JSONObject) arr.get(0);
-                if(1 == (int) obj.get("status")){
-                    startActivity(MainActivity.class);
-                }
-                else{
-                    //handle failure
-                }
-            }
-            catch(JSONException e){
+        protected void onException(Exception e) {
 
-            }
+        }
 
+        @Override
+        protected JSONArray doWork(String... params) throws JSONException {
+            return beerBuddies.getClientInstance().register(params[0], params[1], params[2]);
+        }
+
+        @Override
+        protected void onSuccess(JSONArray arr){
+            startActivity(MainActivity.class);
         }
     }
 
