@@ -52,7 +52,8 @@ app.post(global.routes.UPDATE_LOCATION, function(req,res){
 app.post(global.routes.GET_BUDDIES, function(req,res){
        profiles.getProfilesByDistance(req.profileid, req.body.distance,
        function(rows, err){
-           res.send(JSON.stringify(rows));
+		   var response = [global.OkResponse, rows];
+           res.send(JSON.stringify(response));
        }); 
 });
 /**

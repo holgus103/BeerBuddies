@@ -52,20 +52,21 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
 
         @Override
         protected void onSuccess(JSONArray arr) {
-            // TODO: parse and add markers
-            for(int i = 0; i< arr.length(); i++){
-                try {
-                    JSONObject obj = (JSONObject)arr.get(i);
-                    mMap.addMarker(
-                            new MarkerOptions()
-                                    .position(new LatLng(obj.getDouble("latitude"),obj.getDouble("longitude")))
-                                    .title(obj.getString("username"))
-                    );
+            try {
+                JSONArray users = (JSONArray) arr.get(1);
+                for(int i = 0; i< users.length(); i++){
+                        JSONObject obj = (JSONObject)users.get(i);
+                        mMap.addMarker(
+                                new MarkerOptions()
+                                        .position(new LatLng(obj.getDouble("latitude"),obj.getDouble("longitude")))
+                                        .title(obj.getString("username"))
+                        );
+                    }
                 }
-                catch(JSONException e){
+            catch(JSONException e){
 
-                }
             }
+
         }
 
     }
@@ -109,7 +110,7 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
     public void onConnected(Bundle var1) {
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         Log.d("success", "success");
-        this.mMap.setOnMarkerClickListener(this);
+//        this.mMap.setOnMarkerClickListener(this);
         if (this.mLastLocation != null) {
             LatLng myLoc = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
             this.mMap.addMarker(new MarkerOptions()

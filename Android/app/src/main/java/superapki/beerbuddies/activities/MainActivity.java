@@ -31,7 +31,6 @@ public class MainActivity extends BeerBuddiesActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.beerBuddies = BeerBuddies.getInstance();
         if(!this.beerBuddies.isAuthenticated()) {
             this.startActivity(LoginActivity.class);
         }
@@ -40,7 +39,7 @@ public class MainActivity extends BeerBuddiesActivity {
             // prepare controls
             TextView tvLogin = (TextView) findViewById(R.id.tvLogin);
             tvLogin.setText(this.beerBuddies.getUsername());
-            new SendLocationUpdate().execute(new Double(5.0), new Double(5.0));
+//            new SendLocationUpdate().execute(new Double(5.0), new Double(5.0));
             Button searchButton = (Button) findViewById(R.id.btnSearch);
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
