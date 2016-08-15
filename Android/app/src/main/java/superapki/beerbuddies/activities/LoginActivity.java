@@ -40,18 +40,8 @@ public class LoginActivity extends BeerBuddiesActivity implements GoogleApiClien
     private class LoginSend extends NetworkTask {
 
         @Override
-        protected void onFailure(JSONArray arr){
-
-        }
-
-        @Override
-        protected void onException(Exception e) {
-
-        }
-
-        @Override
-        protected JSONArray doWork(String... params) throws JSONException {
-            return beerBuddies.getClientInstance().register(params[0], params[1], params[2]);
+        protected JSONArray doWork(Object... params) throws JSONException {
+            return beerBuddies.getClientInstance().register((String)params[0], (String)params[1], (String)params[2]);
         }
 
         @Override

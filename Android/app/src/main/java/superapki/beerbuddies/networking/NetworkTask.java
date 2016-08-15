@@ -10,8 +10,8 @@ import org.json.JSONObject;
 /**
  * Created by Kuba on 31/07/2016.
 */
-public abstract class NetworkTask extends AsyncTask<String, Void, JSONArray>{
-    protected abstract JSONArray doWork(String... params) throws JSONException;
+public abstract class NetworkTask extends AsyncTask<Object, Void, JSONArray>{
+    protected abstract JSONArray doWork(Object... params) throws JSONException;
     protected void onSuccess(JSONArray arr){
 
     }
@@ -42,7 +42,7 @@ public abstract class NetworkTask extends AsyncTask<String, Void, JSONArray>{
     }
 
     @Override
-    protected JSONArray doInBackground(String... params) {
+    protected JSONArray doInBackground(Object... params) {
         try {
             return this.doWork(params);
         }

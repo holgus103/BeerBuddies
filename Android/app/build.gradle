@@ -2,9 +2,16 @@ apply plugin: 'com.android.application'
 
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'debug.keystore'
+            keyPassword 'maslomaslo'
+            storeFile file('C:/Users/Kuba/.android/debug.keystore')
+            storePassword 'maslomaslo'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.0.1"
-
     defaultConfig {
         applicationId "superapki.beerbuddies"
         minSdkVersion 21

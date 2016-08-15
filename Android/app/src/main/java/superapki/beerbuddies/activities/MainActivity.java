@@ -16,9 +16,18 @@ import org.json.JSONObject;
 
 import superapki.beerbuddies.R;
 import superapki.beerbuddies.global.BeerBuddies;
+import superapki.beerbuddies.networking.NetworkTask;
 
 public class MainActivity extends BeerBuddiesActivity {
 
+    private class SendLocationUpdate extends NetworkTask{
+
+        @Override
+        protected JSONArray doWork(Object... params) throws JSONException {
+            return beerBuddies.getClientInstance().updateLocation((Double)params[0], (Double)params[1]);
+        }
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +40,7 @@ public class MainActivity extends BeerBuddiesActivity {
             // prepare controls
             TextView tvLogin = (TextView) findViewById(R.id.tvLogin);
             tvLogin.setText(this.beerBuddies.getUsername());
-
+            new SendLocationUpdate().execute(new Double(5.0), new Double(5.0));
             Button searchButton = (Button) findViewById(R.id.btnSearch);
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override

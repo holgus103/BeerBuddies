@@ -2,10 +2,13 @@ package superapki.beerbuddies.activities;
 
 import android.app.FragmentTransaction;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.support.v4.app.FragmentActivity;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -15,34 +18,58 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import superapki.beerbuddies.R;
+import superapki.beerbuddies.networking.NetworkTask;
 
-public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
 
 
-    private class GetBuddies extends AsyncTask<String, Void, JSONArray>{
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
-        @Override
-        protected JSONArray doInBackground(String... params) {
-            try {
-                return beerBuddies.getClientInstance().getBuddies(distance);
-            }
-            catch(JSONException e){
-                // handle incorrect data
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray arr){
-
-        }
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
     }
+
+    private class GetBuddies extends NetworkTask {
+
+        @Override
+        protected JSONArray doWork(Object... params) throws JSONException {
+            return beerBuddies.getClientInstance().getBuddies(distance);
+        }
+
+        @Override
+        protected void onSuccess(JSONArray arr) {
+            // TODO: parse and add markers
+            for(int i = 0; i< arr.length(); i++){
+                try {
+                    JSONObject obj = (JSONObject)arr.get(i);
+                    mMap.addMarker(
+                            new MarkerOptions()
+                                    .position(new LatLng(obj.getDouble("latitude"),obj.getDouble("longitude")))
+                                    .title(obj.getString("username"))
+                    );
+                }
+                catch(JSONException e){
+
+                }
+            }
+        }
+
+    }
+
     private double distance = 5.0;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -67,13 +94,13 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         this.mGoogleApiClient.connect();
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         this.mGoogleApiClient.disconnect();
     }
@@ -81,22 +108,26 @@ public class MapsActivity extends BeerBuddiesActivity implements OnMapReadyCallb
     @Override
     public void onConnected(Bundle var1) {
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.d("success","success");
+        Log.d("success", "success");
+        this.mMap.setOnMarkerClickListener(this);
         if (this.mLastLocation != null) {
             LatLng myLoc = new LatLng(this.mLastLocation.getLatitude(), this.mLastLocation.getLongitude());
-            this.mMap.addMarker(new MarkerOptions().position(myLoc).title("Marker in mLocation"));
+            this.mMap.addMarker(new MarkerOptions()
+                    .position(myLoc)
+                    .title(beerBuddies.getUsername()));
             this.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
         }
+        new GetBuddies().execute();
     }
 
     @Override
     public void onConnectionSuspended(int var1) {
-        Log.d("suspended","suspended");
+        Log.d("suspended", "suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult var1) {
-        Log.d("fail","fail");
+        Log.d("fail", "fail");
     }
 
 
